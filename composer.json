@@ -1,0 +1,13 @@
+{
+    "name": "lucascherifi/pdf-parser-bundle",
+    "description": "A Symfony bundle to parse many kinds of specific PDF Files",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lucas CHERIFI",
+            "email": "lucas@cherifi.info"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
