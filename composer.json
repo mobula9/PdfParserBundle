@@ -8,6 +8,6 @@
             "email": "lucas@cherifi.info"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {}
 }
