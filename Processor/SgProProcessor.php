@@ -5,25 +5,34 @@ namespace Kasifi\PdfParserBundle\Processor;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Class SgProDocumentProcessor
+ * Class SgProProcessor
  * @package Kasifi\PdfParserBundle\Processor
  */
-class SgProDocumentProcessor extends DocumentProcessor implements DocumentProcessorInterface
+class SgProProcessor implements ProcessorInterface
 {
+    private $configuration = [
+        'id'                   => 'sg_pro',
+        'name'                 => 'Société Générale - Compte courant professionnel',
+        'startConditions'      => ['/Date\s+Valeur\s+Nature de l\'opération/'],
+        'endConditions'        => [
+            '/1 Depuis l\'étranger/', '/N° d\'adhérent JAZZ Pro/', '/Société Générale\s+552 120 222 RCS Paris/',
+        ],
+        'rowMergeColumnTokens' => [0],
+        'rowSkipConditions'    => ['SOLDE PRÉCÉDENT AU', 'TOTAUX DES MOUVEMENTS', 'RA4-01K', 'NOUVEAU SOLDE AU'],
+        'rowsToSkip'           => [0],
+    ];
+
     /**
      * @return array
      */
     public function getConfiguration()
     {
-        return [
-            'startConditions'      => ['/Date\s+Valeur\s+Nature de l\'opération/'],
-            'endConditions'        => [
-                '/1 Depuis l\'étranger/', '/N° d\'adhérent JAZZ Pro/', '/Société Générale\s+552 120 222 RCS Paris/',
-            ],
-            'rowMergeColumnTokens' => [0],
-            'rowSkipConditions'    => ['SOLDE PRÉCÉDENT AU', 'TOTAUX DES MOUVEMENTS', 'RA4-01K', 'NOUVEAU SOLDE AU'],
-            'rowsToSkip'           => [0],
-        ];
+        return $this->configuration;
+    }
+
+    public function __toString()
+    {
+        return (string)$this->configuration['name'];
     }
 
     /**

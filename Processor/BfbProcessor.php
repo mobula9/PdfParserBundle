@@ -5,23 +5,32 @@ namespace Kasifi\PdfParserBundle\Processor;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Class BfbDocumentProcessor
+ * Class BfbProcessor
  * @package Kasifi\PdfParserBundle\Processor
  */
-class BfbDocumentProcessor extends DocumentProcessor implements DocumentProcessorInterface
+class BfbProcessor implements ProcessorInterface
 {
+    private $configuration = [
+        'id'                   => 'bfb',
+        'name'                 => 'B For Bank - Compte courant particulier',
+        'startConditions'      => ['/Libellé de l\'opération/'],
+        'endConditions'        => ['/BforBank vous informe/', '/Nous vous rappelons qu\'en cas de différend/'],
+        'rowMergeColumnTokens' => [1],
+        'rowSkipConditions'    => ['Votre ancien solde', '063584840313690801pli', 'Votre nouveau solde'],
+        'rowsToSkip'           => [0, 1],
+    ];
+
     /**
      * @return array
      */
     public function getConfiguration()
     {
-        return [
-            'startConditions'      => ['/Libellé de l\'opération/'],
-            'endConditions'        => ['/BforBank vous informe/', '/Nous vous rappelons qu\'en cas de différend/'],
-            'rowMergeColumnTokens' => [1],
-            'rowSkipConditions'    => ['Votre ancien solde', '063584840313690801pli', 'Votre nouveau solde'],
-            'rowsToSkip'           => [0, 1],
-        ];
+        return $this->configuration;
+    }
+
+    public function __toString()
+    {
+        return (string)$this->configuration['name'];
     }
 
     /**

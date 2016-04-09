@@ -4,7 +4,7 @@ namespace Kasifi\PdfParserBundle;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
-use Kasifi\PdfParserBundle\Processor\DocumentProcessorInterface;
+use Kasifi\PdfParserBundle\Processor\ProcessorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
@@ -16,7 +16,7 @@ class PdfParser
      */
     private $logger;
 
-    /** @var DocumentProcessorInterface */
+    /** @var ProcessorInterface */
     private $processor;
 
     /** @var array */
@@ -24,6 +24,9 @@ class PdfParser
 
     /** @var string */
     private $temporaryDirectoryPath;
+
+    /** @var ProcessorInterface[] */
+    private $availableProcessors = [];
 
     /**
      * PdfParser constructor.
@@ -34,6 +37,22 @@ class PdfParser
     {
         $this->logger = $logger;
         $this->temporaryDirectoryPath = sys_get_temp_dir();
+    }
+
+    /**
+     * @param ProcessorInterface $processor
+     */
+    public function addAvailableProcessor(ProcessorInterface $processor)
+    {
+        $this->availableProcessors[$processor->getConfiguration()['id']] = $processor;
+    }
+
+    /**
+     * @return ProcessorInterface[]
+     */
+    public function getAvailableProcessors()
+    {
+        return $this->availableProcessors;
     }
 
     /**
@@ -57,7 +76,7 @@ class PdfParser
     }
 
     /**
-     * @return DocumentProcessorInterface
+     * @return ProcessorInterface
      */
     public function getProcessor()
     {
@@ -65,9 +84,9 @@ class PdfParser
     }
 
     /**
-     * @param DocumentProcessorInterface $processor
+     * @param ProcessorInterface $processor
      */
-    public function setProcessor($processor)
+    public function setProcessor(ProcessorInterface $processor)
     {
         $this->processor = $processor;
     }

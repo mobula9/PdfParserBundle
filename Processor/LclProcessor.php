@@ -5,23 +5,32 @@ namespace Kasifi\PdfParserBundle\Processor;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Class LclDocumentProcessor
+ * Class LclProcessor
  * @package Kasifi\PdfParserBundle\Processor
  */
-class LclDocumentProcessor extends DocumentProcessor implements DocumentProcessorInterface
+class LclProcessor implements ProcessorInterface
 {
+    private $configuration = [
+        'id'                   => 'lcl',
+        'name'                 => 'LCL - Compte courant particulier',
+        'startConditions'      => ['/ DATE\s+LIBELLE\s+/'],
+        'endConditions'        => ['/Page \d \/ \d/', '/LCL vous informe/'],
+        'rowMergeColumnTokens' => [0],
+        'rowSkipConditions'    => ['ANCIEN SOLDE', 'TOTAUX', 'SOLDE EN EUROS', 'SOLDE INTERMEDIAIRE A'],
+        'rowsToSkip'           => [0],
+    ];
+
     /**
      * @return array
      */
     public function getConfiguration()
     {
-        return [
-            'startConditions'      => ['/ DATE\s+LIBELLE\s+/'],
-            'endConditions'        => ['/Page \d \/ \d/', '/LCL vous informe/'],
-            'rowMergeColumnTokens' => [0],
-            'rowSkipConditions'    => ['ANCIEN SOLDE', 'TOTAUX', 'SOLDE EN EUROS', 'SOLDE INTERMEDIAIRE A'],
-            'rowsToSkip'           => [0],
-        ];
+        return $this->configuration;
+    }
+
+    public function __toString()
+    {
+        return (string)$this->configuration['name'];
     }
 
     /**

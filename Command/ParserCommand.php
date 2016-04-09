@@ -1,9 +1,6 @@
 <?php
 namespace Kasifi\PdfParserBundle\Command;
 
-use Kasifi\PdfParserBundle\Processor\BfbDocumentProcessor;
-use Kasifi\PdfParserBundle\Processor\LclDocumentProcessor;
-use Kasifi\PdfParserBundle\Processor\SgProDocumentProcessor;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,7 +23,7 @@ class ParserCommand extends ContainerAwareCommand
         $this
             ->setName('pdf-parser:parse')
             ->setDescription('Parse document of many types.')
-            ->addArgument('kind', InputArgument::OPTIONAL, 'The kind of document (lcl, bfb, sg)')
+            ->addArgument('processor', InputArgument::OPTIONAL, 'The id of the processor')
             ->addArgument('filepath', InputArgument::OPTIONAL, 'The absolute path to the PDF file to parse.');
     }
 
@@ -38,16 +35,19 @@ class ParserCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $pdfParser = $this->getContainer()->get('kasifi_pdfparser.pdf_parser');
-        $pdfDirectoryPath = $this->getContainer()->getParameter('kasifi_pdfparser.pdf_directory_path');
+        $container = $this->getContainer();
+        $pdfParser = $container->get('kasifi_pdfparser.pdf_parser');
+        $pdfDirectoryPath = $container->getParameter('kasifi_pdfparser.pdf_directory_path');
 
-        // Get kind
-        $kind = $input->getArgument('kind');
-        if (!$kind) {
+        // Select processor
+        $processors = $pdfParser->getAvailableProcessors();
+        $processorId = $input->getArgument('processor');
+        if (!$processorId) {
             $helper = $this->getHelper('question');
-            $question = new ChoiceQuestion('Which kind of document?', ['bfb', 'lcl', 'sg'], 0);
-            $kind = $helper->ask($input, $output, $question);
+            $question = new ChoiceQuestion('Which processor to use?', $processors);
+            $processorId = $helper->ask($input, $output, $question);
         }
+        $pdfParser->setProcessor($processors[$processorId]);
 
         // Select file
         $filePath = $input->getArgument('filepath');
@@ -61,20 +61,8 @@ class ParserCommand extends ContainerAwareCommand
                 $files[] = $file->getRealPath();
             }
 
-            $question = new ChoiceQuestion('Which file? Enter the key.', $files, 0);
+            $question = new ChoiceQuestion('Which file? Enter the key.', $files);
             $filePath = $helper->ask($input, $output, $question);
-        }
-
-        switch ($kind) {
-            case 'lcl':
-                $pdfParser->setProcessor(new LclDocumentProcessor());
-                break;
-            case 'sg':
-                $pdfParser->setProcessor(new SgProDocumentProcessor());
-                break;
-            case 'bfb':
-                $pdfParser->setProcessor(new BfbDocumentProcessor());
-                break;
         }
 
         // Parse

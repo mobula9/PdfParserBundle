@@ -4,6 +4,18 @@ parameters:
 
 services:
     kasifi_pdfparser.pdf_parser:
-            class : Kasifi\PdfParserBundle\PdfParser
-            arguments:
-              - "@monolog.logger.pdf_parser"
+      class : Kasifi\PdfParserBundle\PdfParser
+      arguments:
+        - "@monolog.logger.pdf_parser"
+    kasifi_pdfparser.documents_processors.b_for_bank:
+      class : Kasifi\PdfParserBundle\Processor\BfbProcessor
+      tags:
+        -  { name: kasifi_pdfparser.processor }
+    kasifi_pdfparser.documents_processors.lcl:
+      class : Kasifi\PdfParserBundle\Processor\LclProcessor
+      tags:
+        -  { name: kasifi_pdfparser.processor }
+    kasifi_pdfparser.documents_processors.sg_pro:
+      class : Kasifi\PdfParserBundle\Processor\SgProProcessor
+      tags:
+        -  { name: kasifi_pdfparser.processor }
