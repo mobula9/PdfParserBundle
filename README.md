@@ -17,6 +17,12 @@ Make good use and do not hesitate to contribute to this project.
 Installation
 ------------
 
+### Prerequisites
+
+The binary `pdftotext` is required to use this bundle.
+
+It's available as the `poppler-utils` apt package (Debian/Ubuntu) or the OSX brew package `poppler`.
+
 ### Step 1: Download the Bundle
 
 Open a command console, enter your project directory and execute the
