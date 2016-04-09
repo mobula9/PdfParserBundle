@@ -3,6 +3,7 @@
 namespace Kasifi\PdfParserBundle;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Exception;
 use Kasifi\PdfParserBundle\Processor\DocumentProcessorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -21,11 +22,22 @@ class PdfParser
     /** @var array */
     private $processorConfiguration;
 
+    /**
+     * PdfParser constructor.
+     *
+     * @param LoggerInterface $logger
+     */
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
 
+    /**
+     * @param $filePath
+     *
+     * @return ArrayCollection
+     * @throws Exception
+     */
     public function parse($filePath)
     {
         $this->processorConfiguration = $this->processor->getConfiguration();
@@ -56,6 +68,12 @@ class PdfParser
         $this->processor = $processor;
     }
 
+    /**
+     * @param $data
+     *
+     * @return array|string
+     * @throws Exception
+     */
     private function doParse($data)
     {
 
@@ -64,7 +82,7 @@ class PdfParser
         while ($startPos = $this->findPosition($data, $this->processorConfiguration['startConditions'])) {
             // Find start
             if (is_null($startPos) && !count($blocks)) {
-                throw new \Exception('Start condition never reached.');
+                throw new Exception('Start condition never reached.');
             }
             $data = substr($data, $startPos);
             $data = substr($data, strpos($data, "\n"));
@@ -73,7 +91,7 @@ class PdfParser
 
             $endPos = $this->findPosition($data, $this->processorConfiguration['endConditions']);
             if (is_null($endPos)) {
-                throw new \Exception('End condition not reached at the ' . (count($blocks) + 1) . 'nth loop of block.');
+                throw new Exception('End condition not reached at the ' . (count($blocks) + 1) . 'nth loop of block.');
             } else {
                 $blockData = substr($data, 0, $endPos);
                 $data = substr($data, $endPos);
@@ -99,6 +117,12 @@ class PdfParser
         return $data;
     }
 
+    /**
+     * @param $data
+     * @param $startConditions
+     *
+     * @return bool|int|null
+     */
     private function findPosition($data, $startConditions)
     {
         $firstResult = null;
@@ -116,6 +140,14 @@ class PdfParser
         return $firstResult;
     }
 
+    /**
+     * @param $blockData
+     * @param $skipKeys
+     * @param $rowMergeColumnTokens
+     * @param $rowSkipConditions
+     *
+     * @return array
+     */
     private function parseBlock($blockData, $skipKeys, $rowMergeColumnTokens, $rowSkipConditions)
     {
         $rows = [];
@@ -146,6 +178,13 @@ class PdfParser
         return $rows;
     }
 
+    /**
+     * @param $rawRows
+     * @param $skipKeys
+     * @param $rowSkipConditions
+     *
+     * @return array
+     */
     private function prepareRows($rawRows, $skipKeys, $rowSkipConditions)
     {
         $rows = [];
@@ -176,6 +215,11 @@ class PdfParser
         return $rows;
     }
 
+    /**
+     * @param $rawRows
+     *
+     * @return array
+     */
     private function guessWidth($rawRows)
     {
         $spaceGroups = $this->findSpaceGroups($rawRows);
@@ -192,6 +236,12 @@ class PdfParser
         return $widths;
     }
 
+    /**
+     * @param $colWidths
+     * @param $rawRow
+     *
+     * @return array
+     */
     private function parseRow($colWidths, $rawRow)
     {
         $colValues = [];
@@ -202,6 +252,11 @@ class PdfParser
         return $colValues;
     }
 
+    /**
+     * @param $rawRow
+     *
+     * @return array
+     */
     private function getSpacePositions($rawRow)
     {
         $spacePositions = [];
@@ -214,6 +269,11 @@ class PdfParser
         return $spacePositions;
     }
 
+    /**
+     * @param $rawRows
+     *
+     * @return array
+     */
     private function findSpaceGroups($rawRows)
     {
         $globalSpacePositions = [];
@@ -254,6 +314,12 @@ class PdfParser
         return $spaceGroups;
     }
 
+    /**
+     * @param $row
+     * @param $newRow
+     *
+     * @return mixed
+     */
     private function mergeRows($row, $newRow)
     {
         foreach ($newRow as $newRowColumnIndex => $newRowColumnValue) {
@@ -265,6 +331,11 @@ class PdfParser
         return $row;
     }
 
+    /**
+     * @param $filePath
+     *
+     * @return string
+     */
     private function getTextVersion($filePath)
     {
         $tmpPath = sys_get_temp_dir() . '/' . rand(0, 10000) . '.txt';

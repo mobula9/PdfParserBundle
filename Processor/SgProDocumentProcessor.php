@@ -4,8 +4,15 @@ namespace Kasifi\PdfParserBundle\Processor;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+/**
+ * Class SgProDocumentProcessor
+ * @package Kasifi\PdfParserBundle\Processor
+ */
 class SgProDocumentProcessor extends DocumentProcessor implements DocumentProcessorInterface
 {
+    /**
+     * @return array
+     */
     public function getConfiguration()
     {
         return [

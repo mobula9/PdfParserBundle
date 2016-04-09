@@ -13,6 +13,10 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
+/**
+ * Class ParserCommand
+ * @package Kasifi\PdfParserBundle\Command
+ */
 class ParserCommand extends ContainerAwareCommand
 {
 
@@ -21,6 +25,9 @@ class ParserCommand extends ContainerAwareCommand
      */
     private $pdfParser;
 
+    /**
+     * Configure the command.
+     */
     protected function configure()
     {
         $this
@@ -30,6 +37,12 @@ class ParserCommand extends ContainerAwareCommand
             ->addArgument('filepath', InputArgument::OPTIONAL, 'The absolute path to the PDF file to parse.');
     }
 
+    /**
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     *
+     * @return void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->pdfParser = $this->getContainer()->get('app.pdf_parser');
@@ -77,5 +90,7 @@ class ParserCommand extends ContainerAwareCommand
 
         // Dump
         dump($rows);
+
+        return;
     }
 }
