@@ -63,19 +63,41 @@ class AppKernel extends Kernel
 }
 ```
 
-### Step 3: Use command
+### Step 3: Usage
 
-```sh
-$ php app/console pdf-parser:parse
-```
-```sh
+#### The `pdf-parser:parse` command
+
+Parse document of many types.
+
 Usage:
-  pdf-parser:parse [<kind>] [<filepath>]
-
-Arguments:
-  kind                     The kind of document (lcl, bfb, sg)
-  filepath                 The absolute path to the PDF file to parse.
-
-Help:
- Parse document of many types.
+```sh
+  pdf-parser:parse [<processor>] [<filepath>]
 ```
+Arguments:
+```sh
+  processor                The id of the processor
+  filepath                 The absolute path to the PDF file to parse.
+```
+##### Example in interactive mode (no arguments):
+
+Type the following command:
+```sh
+> $ sf pdf-parser:parse
+```
+The console command asks for a processor. Type `bfb`.
+```sh
+Which processor to use?
+  [bfb   ] B For Bank - Compte courant particulier
+  [lcl   ] LCL - Compte courant particulier
+  [sg_pro] Société Générale - Compte courant professionnel
+ > bfb
+```
+The console command asks for a file. Select the first one (`0`).
+```sh
+Which file? Enter the key.
+  [0] /var/www/app/data/pdf/bfb.pdf
+  [1] /var/www/app/data/pdf/lcl.pdf
+  [2] /var/www/app/data/pdf/sg.pdf
+ > 0
+```
+Now the command will print the parsed rows.
