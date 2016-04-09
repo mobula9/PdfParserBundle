@@ -1,6 +1,6 @@
 <?php
 
-namespace PdfParserBundle\Processor;
+namespace Kasifi\PdfParserBundle\Processor;
 
 class DocumentProcessor
 {

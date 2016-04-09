@@ -8,6 +8,8 @@
             "email": "lucas@cherifi.info"
         }
     ],
-    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": { "Kasifi\\PdfParserBundle\\": "" }
+    },
     "require": {}
 }

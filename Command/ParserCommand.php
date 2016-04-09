@@ -1,10 +1,10 @@
 <?php
-namespace PdfParserBundle\Command;
+namespace Kasifi\PdfParserBundle\Command;
 
-use PdfParserBundle\PdfParser;
-use PdfParserBundle\Processor\BfbDocumentProcessor;
-use PdfParserBundle\Processor\LclDocumentProcessor;
-use PdfParserBundle\Processor\SgProDocumentProcessor;
+use Kasifi\PdfParserBundle\PdfParser;
+use Kasifi\PdfParserBundle\Processor\BfbDocumentProcessor;
+use Kasifi\PdfParserBundle\Processor\LclDocumentProcessor;
+use Kasifi\PdfParserBundle\Processor\SgProDocumentProcessor;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

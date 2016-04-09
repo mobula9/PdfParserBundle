@@ -1,9 +1,9 @@
 <?php
 
-namespace PdfParserBundle;
+namespace Kasifi\PdfParserBundle;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use PdfParserBundle\Processor\DocumentProcessorInterface;
+use Kasifi\PdfParserBundle\Processor\DocumentProcessorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Exception\ProcessFailedException;

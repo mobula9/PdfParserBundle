@@ -1,6 +1,6 @@
 <?php
 
-namespace PdfParserBundle;
+namespace Kasifi\PdfParserBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
