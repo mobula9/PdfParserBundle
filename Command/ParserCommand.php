@@ -11,6 +11,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 class ParserCommand extends ContainerAwareCommand
 {
@@ -25,42 +27,58 @@ class ParserCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('pdf-parser')
+            ->setName('pdf-parser:parse')
             ->setDescription('Parse document of many types.')
-            ->addArgument('kind', InputArgument::OPTIONAL, 'The kind of document (lcl, bfb, sg)');
+            ->addArgument('kind', InputArgument::OPTIONAL, 'The kind of document (lcl, bfb, sg)')
+            ->addArgument('filepath', InputArgument::OPTIONAL, 'The absolute path to the PDF file to parse.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->io = new SymfonyStyle($input, $output);
         $this->pdfParser = $this->getContainer()->get('app.pdf_parser');
+        $kernel = $this->getContainer()->get('kernel');
+        $fixturesDirectoryPath = realpath($kernel->getRootDir() . '/../data/fixtures/pdf');
 
         // Get kind
         $kind = $input->getArgument('kind');
         if (!$kind) {
             $helper = $this->getHelper('question');
-            $question = new ChoiceQuestion('Which kind of document?', ['lcl, bfb, sg']);
+            $question = new ChoiceQuestion('Which kind of document?', ['bfb', 'lcl', 'sg'], 0);
             $kind = $helper->ask($input, $output, $question);
+        }
+
+        // Select file
+        $filepath = $input->getArgument('filepath');
+        if (!$filepath) {
+            $helper = $this->getHelper('question');
+            $finder = new Finder();
+            $finder->files()->in($fixturesDirectoryPath);
+            $files = [];
+            foreach ($finder as $key => $file) {
+                /** @var SplFileInfo $file */
+                $files[] = $file->getRealPath();
+            }
+
+            $question = new ChoiceQuestion('Which file? Enter the key.', $files, 0);
+            $filepath = $helper->ask($input, $output, $question);
         }
 
         $path = null;
         switch ($kind) {
             case 'lcl':
                 $this->pdfParser->setProcessor(new LclDocumentProcessor());
-                $path = __DIR__ . '/../fixtures/lcl.pdf';
                 break;
             case 'sg':
                 $this->pdfParser->setProcessor(new SgProDocumentProcessor());
-                $path = __DIR__ . '/../fixtures/sg.pdf';
                 break;
             case 'bfb':
                 $this->pdfParser->setProcessor(new BfbDocumentProcessor());
-                $path = __DIR__ . '/../fixtures/bfb.pdf';
                 break;
         }
 
         // Parse
-        $rows = $this->pdfParser->parse($path);
+        $rows = $this->pdfParser->parse($filepath);
 
         // Dump
         dump($rows);
