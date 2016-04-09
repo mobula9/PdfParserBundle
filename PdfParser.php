@@ -132,11 +132,10 @@ class PdfParser
         $rows = [];
         $rawRows = explode("\n", $blockData);
         $rawRows = $this->prepareRows($rawRows, $skipKeys, $rowSkipConditions);
-        //dump(implode("\n", $rawRows));
+        $this->logger->debug(implode("\n", $rawRows));
         $previousIndex = 0;
         $colWidths = $this->guessWidth($rawRows);
         foreach ($rawRows as $key => $rawRow) {
-            //dump($rawRow);
             $row = $this->parseRow($colWidths, $rawRow);
             $toMergeWithPrevious = false;
             if ($key > 0) {
@@ -256,13 +255,6 @@ class PdfParser
                     $spaceGroupIndex++;
                     $spaceGroups[$spaceGroupIndex] = ['start' => $spacePosition, 'end' => $spacePosition + 1];
                 }
-//                dump([
-//                    'key'         => $key,
-//                    'value'       => $spacePosition,
-//                    'increase'    => $increase,
-//                    'group_index' => $spaceGroupIndex,
-//                    'length'      => $spaceGroups[$groupIndex],
-//                ]);
             }
         }
 
