@@ -1,3 +1,6 @@
+
+[![Build Status](https://travis-ci.org/lucascherifi/PdfParserBundle.svg?branch=master)](https://travis-ci.org/lucascherifi/PdfParserBundle)
+
 Installation
 ============
 
