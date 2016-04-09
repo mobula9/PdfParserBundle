@@ -8,7 +8,7 @@ The purpose of this bundle is to parse the contents of PDF files using DocumentP
 For now, three are available in this bundle:
 - "LCL - Relevé de compte courant particulier"
 - "BforBank - Relevé de compte courant particulier"
-- "BforBank - especially current account statement."
+- "Société Générale - Relevé de compte courant professionnel"
 
 Feel free to propose new DocumentProcessors using Pull Requests.
 
