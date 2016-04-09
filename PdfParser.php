@@ -22,6 +22,9 @@ class PdfParser
     /** @var array */
     private $processorConfiguration;
 
+    /** @var string */
+    private $temporaryDirectoryPath;
+
     /**
      * PdfParser constructor.
      *
@@ -30,6 +33,7 @@ class PdfParser
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
+        $this->temporaryDirectoryPath = sys_get_temp_dir();
     }
 
     /**
@@ -338,7 +342,7 @@ class PdfParser
      */
     private function getTextVersion($filePath)
     {
-        $tmpPath = sys_get_temp_dir() . '/' . rand(0, 10000) . '.txt';
+        $tmpPath = $this->temporaryDirectoryPath . '/' . rand(0, 10000) . '.txt';
         $process = new Process('/usr/bin/pdftotext -layout ' . $filePath . ' ' . $tmpPath);
         $this->logger->info('Execute Pdftotext', ['file' => $filePath]);
         $process->run(function ($type, $buffer) {

@@ -1,0 +1,9 @@
+parameters:
+    kasifi_pdfparser.temporary_directory_path: ~
+    kasifi_pdfparser.pdf_directory_path: "%kernel.root_dir%/data/pdf"
+
+services:
+    kasifi_pdfparser.pdf_parser:
+            class : Kasifi\PdfParserBundle\PdfParser
+            arguments:
+              - "@monolog.logger.pdf_parser"

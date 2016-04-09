@@ -1,7 +1,6 @@
 <?php
 namespace Kasifi\PdfParserBundle\Command;
 
-use Kasifi\PdfParserBundle\PdfParser;
 use Kasifi\PdfParserBundle\Processor\BfbDocumentProcessor;
 use Kasifi\PdfParserBundle\Processor\LclDocumentProcessor;
 use Kasifi\PdfParserBundle\Processor\SgProDocumentProcessor;
@@ -19,12 +18,6 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class ParserCommand extends ContainerAwareCommand
 {
-
-    /**
-     * @var PdfParser
-     */
-    private $pdfParser;
-
     /**
      * Configure the command.
      */
@@ -45,9 +38,8 @@ class ParserCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->pdfParser = $this->getContainer()->get('app.pdf_parser');
-        $kernel = $this->getContainer()->get('kernel');
-        $fixturesDirectoryPath = realpath($kernel->getRootDir() . '/../data/fixtures/pdf');
+        $pdfParser = $this->getContainer()->get('kasifi_pdfparser.pdf_parser');
+        $pdfDirectoryPath = $this->getContainer()->getParameter('kasifi_pdfparser.pdf_directory_path');
 
         // Get kind
         $kind = $input->getArgument('kind');
@@ -62,7 +54,7 @@ class ParserCommand extends ContainerAwareCommand
         if (!$filePath) {
             $helper = $this->getHelper('question');
             $finder = new Finder();
-            $finder->files()->in($fixturesDirectoryPath);
+            $finder->files()->in($pdfDirectoryPath);
             $files = [];
             foreach ($finder as $key => $file) {
                 /** @var SplFileInfo $file */
@@ -75,18 +67,18 @@ class ParserCommand extends ContainerAwareCommand
 
         switch ($kind) {
             case 'lcl':
-                $this->pdfParser->setProcessor(new LclDocumentProcessor());
+                $pdfParser->setProcessor(new LclDocumentProcessor());
                 break;
             case 'sg':
-                $this->pdfParser->setProcessor(new SgProDocumentProcessor());
+                $pdfParser->setProcessor(new SgProDocumentProcessor());
                 break;
             case 'bfb':
-                $this->pdfParser->setProcessor(new BfbDocumentProcessor());
+                $pdfParser->setProcessor(new BfbDocumentProcessor());
                 break;
         }
 
         // Parse
-        $rows = $this->pdfParser->parse($filePath);
+        $rows = $pdfParser->parse($filePath);
 
         // Dump
         dump($rows);
