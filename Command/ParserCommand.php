@@ -10,14 +10,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 class ParserCommand extends ContainerAwareCommand
 {
-    /** @var SymfonyStyle */
-    private $io;
 
     /**
      * @var PdfParser
@@ -35,7 +32,6 @@ class ParserCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->io = new SymfonyStyle($input, $output);
         $this->pdfParser = $this->getContainer()->get('app.pdf_parser');
         $kernel = $this->getContainer()->get('kernel');
         $fixturesDirectoryPath = realpath($kernel->getRootDir() . '/../data/fixtures/pdf');
@@ -64,7 +60,6 @@ class ParserCommand extends ContainerAwareCommand
             $filePath = $helper->ask($input, $output, $question);
         }
 
-        $path = null;
         switch ($kind) {
             case 'lcl':
                 $this->pdfParser->setProcessor(new LclDocumentProcessor());

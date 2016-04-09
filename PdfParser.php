@@ -5,7 +5,6 @@ namespace Kasifi\PdfParserBundle;
 use Doctrine\Common\Collections\ArrayCollection;
 use Kasifi\PdfParserBundle\Processor\DocumentProcessorInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -15,9 +14,6 @@ class PdfParser
      * @var LoggerInterface
      */
     private $logger;
-
-    /** @var SymfonyStyle */
-    private $io;
 
     /** @var DocumentProcessorInterface */
     private $processor;
@@ -58,13 +54,6 @@ class PdfParser
     public function setProcessor($processor)
     {
         $this->processor = $processor;
-    }
-
-    public function setIo(SymfonyStyle $io)
-    {
-        $this->io = $io;
-
-        return $this;
     }
 
     private function doParse($data)
@@ -243,7 +232,6 @@ class PdfParser
         $spaceGroups = [];
         $spaceGroupIndex = 0;
         foreach ($globalSpacePositions as $key => $spacePosition) {
-            $nextPos = null;
             if ($key == 0) {
                 $spaceGroups[$spaceGroupIndex] = ['start' => $spacePosition, 'end' => $spacePosition + 1];
             } else {
