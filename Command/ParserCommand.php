@@ -49,8 +49,8 @@ class ParserCommand extends ContainerAwareCommand
         }
 
         // Select file
-        $filepath = $input->getArgument('filepath');
-        if (!$filepath) {
+        $filePath = $input->getArgument('filepath');
+        if (!$filePath) {
             $helper = $this->getHelper('question');
             $finder = new Finder();
             $finder->files()->in($fixturesDirectoryPath);
@@ -61,7 +61,7 @@ class ParserCommand extends ContainerAwareCommand
             }
 
             $question = new ChoiceQuestion('Which file? Enter the key.', $files, 0);
-            $filepath = $helper->ask($input, $output, $question);
+            $filePath = $helper->ask($input, $output, $question);
         }
 
         $path = null;
@@ -78,7 +78,7 @@ class ParserCommand extends ContainerAwareCommand
         }
 
         // Parse
-        $rows = $this->pdfParser->parse($filepath);
+        $rows = $this->pdfParser->parse($filePath);
 
         // Dump
         dump($rows);
