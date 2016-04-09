@@ -1,25 +1,36 @@
-
 [![Build Status](https://travis-ci.org/lucascherifi/PdfParserBundle.svg?branch=master)](https://travis-ci.org/lucascherifi/PdfParserBundle)
 
-Installation
-============
+PdfParserBundle
+===============
 
-Step 1: Download the Bundle
----------------------------
+The purpose of this bundle is to parse the contents of PDF files using DocumentProcessors. It returns formatted data ready to use.
+
+For now, three are available in this bundle:
+- "LCL - Relevé de compte courant particulier"
+- "BforBank - Relevé de compte courant particulier"
+- "BforBank - especially current account statement."
+
+Feel free to propose new DocumentProcessors using Pull Requests.
+
+Make good use and do not hesitate to contribute to this project.
+
+Installation
+------------
+
+### Step 1: Download the Bundle
 
 Open a command console, enter your project directory and execute the
 following command to download the latest stable version of this bundle:
 
 ```bash
-$ composer require lucascherifi/pdf-parser-bundle "~1"
+$ composer require lucascherifi/pdf-parser-bundle "dev-master"
 ```
 
 This command requires you to have Composer installed globally, as explained
 in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
 of the Composer documentation.
 
-Step 2: Enable the Bundle
--------------------------
+### Step 2: Enable the Bundle
 
 Then, enable the bundle by adding it to the list of registered bundles
 in the `app/AppKernel.php` file of your project:
@@ -36,7 +47,7 @@ class AppKernel extends Kernel
         $bundles = array(
             // ...
 
-            new PdfParser\PdfParserBundle(),
+            new Kasifi\PdfParserBundle\PdfParserBundle(),
         );
 
         // ...
@@ -44,4 +55,21 @@ class AppKernel extends Kernel
 
     // ...
 }
+```
+
+### Step 3: Use command
+
+```sh
+$ php app/console pdf-parser:parse
+```
+```sh
+Usage:
+  pdf-parser:parse [<kind>] [<filepath>]
+
+Arguments:
+  kind                     The kind of document (lcl, bfb, sg)
+  filepath                 The absolute path to the PDF file to parse.
+
+Help:
+ Parse document of many types.
 ```
