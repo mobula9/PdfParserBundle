@@ -33,7 +33,7 @@ class LclProcessor extends Processor implements ProcessorInterface
             $date->setDate(2000 + (int) substr($dateRaw, 6, 2), (int) substr($dateRaw, 3, 2), (int) substr($dateRaw, 0, 2));
             $date->setTime(12, 0, 0);
             // Transaction
-            $transaction = $this->frenchTransactionFormatter($item[3], $item[4]);
+            $transaction = $this->frenchTransactionFormatter($item[3], isset($item[4]) ? $item[4] : null);
 
             return [
                 'date'  => $date,

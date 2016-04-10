@@ -42,7 +42,7 @@ class SgProProcessor extends Processor implements ProcessorInterface
             $valueDate->setTime(12, 0, 0);
 
             // Transaction
-            $transaction = $this->frenchTransactionFormatter($item[3], $item[4]);
+            $transaction = $this->frenchTransactionFormatter($item[3], isset($item[4]) ? $item[4] : null);
 
             return [
                 'date' => $date,
