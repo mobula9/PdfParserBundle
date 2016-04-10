@@ -26,20 +26,20 @@ class LclProcessor extends Processor implements ProcessorInterface
      */
     public function format(ArrayCollection $data)
     {
-        $data = $data->map(function($item) {
+        $data = $data->map(function ($item) {
             // Date
             $dateRaw = $item[2];
             $date = new \DateTime();
-            $date->setDate(2000 + (int)substr($dateRaw, 6, 2), (int)substr($dateRaw, 3, 2), (int)substr($dateRaw, 0, 2));
+            $date->setDate(2000 + (int) substr($dateRaw, 6, 2), (int) substr($dateRaw, 3, 2), (int) substr($dateRaw, 0, 2));
             $date->setTime(12, 0, 0);
             // Value
             $debitRaw = $item[3];
             if (strlen($debitRaw)) {
-                $value = abs((float)str_replace(',', '.', str_replace(' ', '', $debitRaw)));
+                $value = abs((float) str_replace(',', '.', str_replace(' ', '', $debitRaw)));
                 $debit = true;
             } else {
                 $creditRaw = $item[4];
-                $value = (float)str_replace(',', '.', str_replace(' ', '', $creditRaw));
+                $value = (float) str_replace(',', '.', str_replace(' ', '', $creditRaw));
                 $debit = false;
             }
 
