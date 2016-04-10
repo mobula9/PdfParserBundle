@@ -25,4 +25,8 @@ abstract class Processor
     {
         return (string)$this->configuration['name'];
     }
+
+    public function frenchDateFormatter($raw)
+    {
+    }
 }

@@ -2,8 +2,8 @@
 
 namespace Kasifi\PdfParserBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 class ProcessorCompilerPass implements CompilerPassInterface
@@ -22,7 +22,7 @@ class ProcessorCompilerPass implements CompilerPassInterface
         foreach ($taggedServices as $id => $tags) {
             $definition->addMethodCall(
                 'addAvailableProcessor',
-                array(new Reference($id))
+                [new Reference($id)]
             );
         }
     }

@@ -1,15 +1,17 @@
 {
-    "name": "lucascherifi/pdf-parser-bundle",
-    "description": "A Symfony bundle to parse many kinds of specific PDF Files",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Lucas CHERIFI",
-            "email": "lucas@cherifi.info"
-        }
-    ],
-    "autoload": {
-        "psr-4": { "Kasifi\\PdfParserBundle\\": "" }
-    },
-    "require": {}
+  "name": "lucascherifi/pdf-parser-bundle",
+  "description": "A Symfony bundle to parse many kinds of specific PDF Files",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Lucas CHERIFI",
+      "email": "lucas@cherifi.info"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Kasifi\\PdfParserBundle\\": ""
+    }
+  },
+  "require": {}
 }

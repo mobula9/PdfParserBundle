@@ -93,9 +93,8 @@ class ParserCommand extends ContainerAwareCommand
                 if (count($data)) {
                     $table = new Table($output);
                     $table
-                        ->setHeaders(array(array_keys($data[0])))
-                        ->setRows($data)
-                    ;
+                        ->setHeaders([array_keys($data[0])])
+                        ->setRows($data);
                     $table->render();
                 }
                 break;
