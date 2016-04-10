@@ -5,20 +5,20 @@ namespace Kasifi\PdfParserBundle\Processor;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Class SgProProcessor
+ * Class SgProProcessor.
  */
 class SgProProcessor extends Processor implements ProcessorInterface
 {
     protected $configuration = [
-        'id'                   => 'sg_pro',
-        'name'                 => 'Société Générale - Compte courant professionnel',
-        'startConditions'      => ['/Date\s+Valeur\s+Nature de l\'opération/'],
-        'endConditions'        => [
+        'id' => 'sg_pro',
+        'name' => 'Société Générale - Compte courant professionnel',
+        'startConditions' => ['/Date\s+Valeur\s+Nature de l\'opération/'],
+        'endConditions' => [
             '/1 Depuis l\'étranger/', '/N° d\'adhérent JAZZ Pro/', '/Société Générale\s+552 120 222 RCS Paris/',
         ],
         'rowMergeColumnTokens' => [0],
-        'rowSkipConditions'    => ['SOLDE PRÉCÉDENT AU', 'TOTAUX DES MOUVEMENTS', 'RA4-01K', 'NOUVEAU SOLDE AU'],
-        'rowsToSkip'           => [0],
+        'rowSkipConditions' => ['SOLDE PRÉCÉDENT AU', 'TOTAUX DES MOUVEMENTS', 'RA4-01K', 'NOUVEAU SOLDE AU'],
+        'rowsToSkip' => [0],
     ];
 
     /**
@@ -32,32 +32,32 @@ class SgProProcessor extends Processor implements ProcessorInterface
             // Date
             $dateRaw = $item[0];
             $date = new \DateTime();
-            $date->setDate((int)substr($dateRaw, 6, 4), (int)substr($dateRaw, 3, 2), (int)substr($dateRaw, 0, 2));
+            $date->setDate((int) substr($dateRaw, 6, 4), (int) substr($dateRaw, 3, 2), (int) substr($dateRaw, 0, 2));
             $date->setTime(12, 0, 0);
 
             // Value Date
             $dateRaw = $item[1];
             $valueDate = new \DateTime();
-            $valueDate->setDate((int)substr($dateRaw, 6, 4), (int)substr($dateRaw, 3, 2), (int)substr($dateRaw, 0, 2));
+            $valueDate->setDate((int) substr($dateRaw, 6, 4), (int) substr($dateRaw, 3, 2), (int) substr($dateRaw, 0, 2));
             $valueDate->setTime(12, 0, 0);
 
             // Value
             $debitRaw = $item[3];
             if (strlen($debitRaw)) {
-                $value = abs((float)str_replace(',', '.', str_replace('.', '', $debitRaw)));
+                $value = abs((float) str_replace(',', '.', str_replace('.', '', $debitRaw)));
                 $debit = true;
             } else {
                 $creditRaw = $item[4];
-                $value = (float)str_replace(',', '.', str_replace('.', '', $creditRaw));
+                $value = (float) str_replace(',', '.', str_replace('.', '', $creditRaw));
                 $debit = false;
             }
 
             return [
-                'date'       => $date,
+                'date' => $date,
                 'value_date' => $valueDate,
-                'label'      => $item[2],
-                'value'      => $value,
-                'debit'      => $debit,
+                'label' => $item[2],
+                'value' => $value,
+                'debit' => $debit,
             ];
         });
 

@@ -3,7 +3,7 @@
 namespace Kasifi\PdfParserBundle\Processor;
 
 /**
- * Class Processor
+ * Class Processor.
  */
 abstract class Processor
 {
@@ -22,7 +22,7 @@ abstract class Processor
 
     public function __toString()
     {
-        return (string)$this->configuration['name'];
+        return (string) $this->configuration['name'];
     }
 
     public function frenchDateFormatter($raw)

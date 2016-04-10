@@ -5,18 +5,18 @@ namespace Kasifi\PdfParserBundle\Processor;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Class LclProcessor
+ * Class LclProcessor.
  */
 class LclProcessor extends Processor implements ProcessorInterface
 {
     protected $configuration = [
-        'id'                   => 'lcl',
-        'name'                 => 'LCL - Compte courant particulier',
-        'startConditions'      => ['/ DATE\s+LIBELLE\s+/'],
-        'endConditions'        => ['/Page \d \/ \d/', '/LCL vous informe/'],
+        'id' => 'lcl',
+        'name' => 'LCL - Compte courant particulier',
+        'startConditions' => ['/ DATE\s+LIBELLE\s+/'],
+        'endConditions' => ['/Page \d \/ \d/', '/LCL vous informe/'],
         'rowMergeColumnTokens' => [0],
-        'rowSkipConditions'    => ['ANCIEN SOLDE', 'TOTAUX', 'SOLDE EN EUROS', 'SOLDE INTERMEDIAIRE A'],
-        'rowsToSkip'           => [0],
+        'rowSkipConditions' => ['ANCIEN SOLDE', 'TOTAUX', 'SOLDE EN EUROS', 'SOLDE INTERMEDIAIRE A'],
+        'rowsToSkip' => [0],
     ];
 
     /**
@@ -30,21 +30,21 @@ class LclProcessor extends Processor implements ProcessorInterface
             // Date
             $dateRaw = $item[2];
             $date = new \DateTime();
-            $date->setDate(2000 + (int)substr($dateRaw, 6, 2), (int)substr($dateRaw, 3, 2), (int)substr($dateRaw, 0, 2));
+            $date->setDate(2000 + (int) substr($dateRaw, 6, 2), (int) substr($dateRaw, 3, 2), (int) substr($dateRaw, 0, 2));
             $date->setTime(12, 0, 0);
             // Value
             $debitRaw = $item[3];
             if (strlen($debitRaw)) {
-                $value = abs((float)str_replace(',', '.', str_replace(' ', '', $debitRaw)));
+                $value = abs((float) str_replace(',', '.', str_replace(' ', '', $debitRaw)));
                 $debit = true;
             } else {
                 $creditRaw = $item[4];
-                $value = (float)str_replace(',', '.', str_replace(' ', '', $creditRaw));
+                $value = (float) str_replace(',', '.', str_replace(' ', '', $creditRaw));
                 $debit = false;
             }
 
             return [
-                'date'  => $date,
+                'date' => $date,
                 'label' => $item[1],
                 'value' => $value,
                 'debit' => $debit,
