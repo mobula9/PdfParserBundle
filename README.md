@@ -158,11 +158,12 @@ Creates a `AppBundle/Processor/MyProcessor.php` file with the following content:
 namespace AppBundle\Processor;
 
 use Kasifi\PdfParserBundle\Processor\ProcessorInterface;
+use Kasifi\PdfParserBundle\Processor\Processor;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class MyProcessor implements ProcessorInterface
+class MyProcessor extends Processor implements ProcessorInterface
 {
-    private $configuration = [
+    protected $configuration = [
         'id'                   => 'my',
         'name'                 => 'Title of my processor',
         'startConditions'      => ['/A text content in the header row ot the table to parse/'],
@@ -171,19 +172,6 @@ class MyProcessor implements ProcessorInterface
         'rowSkipConditions'    => ['useless string', 'another useless string'],
         'rowsToSkip'           => [0, 1],
     ];
-
-    /**
-     * @return array
-     */
-    public function getConfiguration()
-    {
-        return $this->configuration;
-    }
-
-    public function __toString()
-    {
-        return (string)$this->configuration['name'];
-    }
 
     /**
      * @param ArrayCollection $data
