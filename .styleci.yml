@@ -4,7 +4,6 @@ enabled:
   - newline_after_open_tag
   - ordered_use
   - short_array_syntax
-  - binary_operator_spaces
   - cast_spaces
   - concat_with_spaces
 
