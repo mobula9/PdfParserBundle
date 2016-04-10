@@ -5,6 +5,7 @@ namespace Kasifi\PdfParserBundle;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use Kasifi\PdfParserBundle\Processor\ProcessorInterface;
+use Kasifi\PdfParserBundle\Util\ParseHelper;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
@@ -56,6 +57,22 @@ class PdfParser
     }
 
     /**
+     * @return ProcessorInterface
+     */
+    public function getProcessor()
+    {
+        return $this->processor;
+    }
+
+    /**
+     * @param ProcessorInterface $processor
+     */
+    public function setProcessor(ProcessorInterface $processor)
+    {
+        $this->processor = $processor;
+    }
+
+    /**
      * @param $filePath
      *
      * @return ArrayCollection
@@ -77,22 +94,6 @@ class PdfParser
     }
 
     /**
-     * @return ProcessorInterface
-     */
-    public function getProcessor()
-    {
-        return $this->processor;
-    }
-
-    /**
-     * @param ProcessorInterface $processor
-     */
-    public function setProcessor(ProcessorInterface $processor)
-    {
-        $this->processor = $processor;
-    }
-
-    /**
      * @param $data
      *
      * @return array|string
@@ -102,8 +103,7 @@ class PdfParser
     private function doParse($data)
     {
         $blocks = [];
-
-        while ($startPos = $this->findPosition($data, $this->processorConfiguration['startConditions'])) {
+        while ($startPos = ParseHelper::findPosition($data, $this->processorConfiguration['startConditions'])) {
             // Find start
             if (is_null($startPos) && !count($blocks)) {
                 throw new Exception('Start condition never reached.');
@@ -113,7 +113,7 @@ class PdfParser
 
             // Find end
 
-            $endPos = $this->findPosition($data, $this->processorConfiguration['endConditions']);
+            $endPos = ParseHelper::findPosition($data, $this->processorConfiguration['endConditions']);
             if (is_null($endPos)) {
                 throw new Exception('End condition not reached at the ' . (count($blocks) + 1) . 'nth loop of block.');
             } else {
@@ -141,28 +141,7 @@ class PdfParser
         return $data;
     }
 
-    /**
-     * @param $data
-     * @param $startConditions
-     *
-     * @return bool|int|null
-     */
-    private function findPosition($data, $startConditions)
-    {
-        $firstResult = null;
-        foreach ($startConditions as $startCondition) {
-            preg_match($startCondition, $data, $matches);
-            if (count($matches)) {
-                $pos = strpos($data, $matches[0]);
-                if (is_null($firstResult) || $pos < $firstResult) {
-                    $firstResult = $pos;
-                }
-            }
-            unset($matches);
-        }
 
-        return $firstResult;
-    }
 
     /**
      * @param $blockData
@@ -176,12 +155,12 @@ class PdfParser
     {
         $rows = [];
         $rawRows = explode("\n", $blockData);
-        $rawRows = $this->prepareRows($rawRows, $skipKeys, $rowSkipConditions);
+        $rawRows = ParseHelper::prepareRows($rawRows, $skipKeys, $rowSkipConditions);
         $this->logger->debug(implode("\n", $rawRows));
         $previousIndex = 0;
         $colWidths = $this->guessWidth($rawRows);
         foreach ($rawRows as $key => $rawRow) {
-            $row = $this->parseRow($colWidths, $rawRow);
+            $row = ParseHelper::parseRow($colWidths, $rawRow);
             $toMergeWithPrevious = false;
             if ($key > 0) {
                 foreach ($rowMergeColumnTokens as $rowMergeColumnToken) {
@@ -192,7 +171,7 @@ class PdfParser
             }
 
             if ($toMergeWithPrevious) {
-                $rows[$previousIndex] = $this->mergeRows($rows[$previousIndex], $row);
+                $rows[$previousIndex] = ParseHelper::mergeRows($rows[$previousIndex], $row);
             } else {
                 $rows[] = $row;
                 $previousIndex = count($rows) - 1;
@@ -204,97 +183,6 @@ class PdfParser
 
     /**
      * @param $rawRows
-     * @param $skipKeys
-     * @param $rowSkipConditions
-     *
-     * @return array
-     */
-    private function prepareRows($rawRows, $skipKeys, $rowSkipConditions)
-    {
-        $rows = [];
-        $maxWidth = 0;
-        foreach ($rawRows as $key => $rawRow) {
-            // BYPASS EMPTY ROWS OR SPECIFIED ONES TO BE BYPASSED
-            if (!strlen(trim($rawRow)) || in_array($key, $skipKeys)) {
-                continue;
-            }
-            // SKIP ROWS TO SKIP
-            foreach ($rowSkipConditions as $rowSkipCondition) {
-                if (strpos($rawRow, $rowSkipCondition) !== false) {
-                    continue 2;
-                }
-            }
-
-            if (strlen($rawRow) > $maxWidth) {
-                $maxWidth = strlen($rawRow);
-            }
-            $rows[] = $rawRow;
-        }
-        // SET SAME PADDING FOR EACH ROWS
-        foreach ($rows as &$row) {
-            $row = str_pad($row, $maxWidth, ' ');
-        }
-        unset($row);
-
-        return $rows;
-    }
-
-    /**
-     * @param $rawRows
-     *
-     * @return array
-     */
-    private function guessWidth($rawRows)
-    {
-        $spaceGroups = $this->findSpaceGroups($rawRows);
-
-        $widths = [];
-        $spaceEnd = 0;
-        foreach ($spaceGroups as $spaceGroupKey => $spaceGroup) {
-            $spaceStart = $spaceGroup['start'];
-            $widths[] = ['start' => $spaceEnd, 'length' => $spaceStart - $spaceEnd];
-            $spaceEnd = $spaceGroup['end'];
-        }
-        $widths[] = ['start' => $spaceEnd, 'length' => strlen($rawRows[0]) - $spaceEnd];
-
-        return $widths;
-    }
-
-    /**
-     * @param $colWidths
-     * @param $rawRow
-     *
-     * @return array
-     */
-    private function parseRow($colWidths, $rawRow)
-    {
-        $colValues = [];
-        foreach ($colWidths as $item) {
-            $colValues[] = trim(substr($rawRow, $item['start'], $item['length']));
-        }
-
-        return $colValues;
-    }
-
-    /**
-     * @param $rawRow
-     *
-     * @return array
-     */
-    private function getSpacePositions($rawRow)
-    {
-        $spacePositions = [];
-        foreach (str_split($rawRow) as $key => $char) {
-            if ($char == ' ') {
-                $spacePositions[] = $key;
-            }
-        }
-
-        return $spacePositions;
-    }
-
-    /**
-     * @param $rawRows
      *
      * @return array
      */
@@ -302,7 +190,7 @@ class PdfParser
     {
         $globalSpacePositions = [];
         foreach ($rawRows as $rawRow) {
-            $spacePositions = $this->getSpacePositions($rawRow);
+            $spacePositions = ParseHelper::getSpacePositions($rawRow);
 
             if (count($globalSpacePositions)) {
                 $globalSpacePositions = array_intersect($globalSpacePositions, $spacePositions);
@@ -338,20 +226,24 @@ class PdfParser
     }
 
     /**
-     * @param $row
-     * @param $newRow
+     * @param $rawRows
      *
-     * @return mixed
+     * @return array
      */
-    private function mergeRows($row, $newRow)
+    private function guessWidth($rawRows)
     {
-        foreach ($newRow as $newRowColumnIndex => $newRowColumnValue) {
-            if (strlen($newRowColumnValue)) {
-                $row[$newRowColumnIndex] = trim($row[$newRowColumnIndex] . "\n" . $newRowColumnValue);
-            }
-        }
+        $spaceGroups = $this->findSpaceGroups($rawRows);
 
-        return $row;
+        $widths = [];
+        $spaceEnd = 0;
+        foreach ($spaceGroups as $spaceGroupKey => $spaceGroup) {
+            $spaceStart = $spaceGroup['start'];
+            $widths[] = ['start' => $spaceEnd, 'length' => $spaceStart - $spaceEnd];
+            $spaceEnd = $spaceGroup['end'];
+        }
+        $widths[] = ['start' => $spaceEnd, 'length' => strlen($rawRows[0]) - $spaceEnd];
+
+        return $widths;
     }
 
     /**
@@ -366,9 +258,9 @@ class PdfParser
         $this->logger->info('Execute Pdftotext', ['file' => $filePath]);
         $process->run(function ($type, $buffer) {
             if (Process::ERR === $type) {
-                echo 'ERR > ' . $buffer;
+                $this->logger->error($buffer);
             } else {
-                echo 'OUT > ' . $buffer;
+                $this->logger->info($buffer);
             }
         });
 
@@ -380,21 +272,5 @@ class PdfParser
         unlink($tmpPath);
 
         return $content;
-    }
-
-    /**
-     * @param $rows
-     *
-     * @return mixed
-     */
-    public static function inlineDates($rows)
-    {
-        foreach ($rows as &$row) {
-            foreach ($row as &$col) {
-                $col = $col instanceof \DateTime ? $col->format(\DateTime::ISO8601) : $col;
-            }
-        }
-
-        return $rows;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Kasifi\PdfParserBundle\Command;
 
-use Kasifi\PdfParserBundle\PdfParser;
+use Kasifi\PdfParserBundle\Util\ParseHelper;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -74,7 +74,7 @@ class ParserCommand extends ContainerAwareCommand
         // Parse
         $rows = $pdfParser->parse($filePath);
 
-        $data = PdfParser::inlineDates($rows->toArray());
+        $data = ParseHelper::inlineDates($rows->toArray());
 
         // Write output
         switch ($format) {
