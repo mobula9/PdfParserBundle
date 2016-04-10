@@ -1,13 +1,23 @@
 <?php
 namespace Kasifi\PdfParserBundle\Command;
 
+use Kasifi\PdfParserBundle\PdfParser;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Yaml\Dumper;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class ParserCommand
@@ -24,7 +34,8 @@ class ParserCommand extends ContainerAwareCommand
             ->setName('pdf-parser:parse')
             ->setDescription('Parse document of many types.')
             ->addArgument('processor', InputArgument::OPTIONAL, 'The id of the processor')
-            ->addArgument('filepath', InputArgument::OPTIONAL, 'The absolute path to the PDF file to parse.');
+            ->addArgument('filepath', InputArgument::OPTIONAL, 'The absolute path to the PDF file to parse.')
+            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (console, json, yml)', 'console');
     }
 
     /**
@@ -65,11 +76,36 @@ class ParserCommand extends ContainerAwareCommand
             $filePath = $helper->ask($input, $output, $question);
         }
 
+        // Select format
+        $format = $input->getOption('format');
+
         // Parse
         $rows = $pdfParser->parse($filePath);
 
-        // Dump
-        dump($rows);
+        $data = PdfParser::inlineDates($rows->toArray());
+
+        // Write output
+        switch ($format) {
+            case 'json':
+                $outputData = json_encode($data);
+                $output->write($outputData);
+                break;
+            case 'yml':
+                $dumper = new Dumper();
+                $outputData = $dumper->dump($data, 1);
+                $output->write($outputData);
+                break;
+            case 'console':
+                if (count($data)) {
+                    $table = new Table($output);
+                    $table
+                        ->setHeaders(array(array_keys($data[0])))
+                        ->setRows($data)
+                    ;
+                    $table->render();
+                }
+                break;
+        }
 
         return;
     }

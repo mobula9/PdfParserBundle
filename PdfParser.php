@@ -381,4 +381,20 @@ class PdfParser
 
         return $content;
     }
+
+    /**
+     * @param $rows
+     *
+     * @return mixed
+     */
+    public static function inlineDates($rows)
+    {
+        foreach ($rows as &$row) {
+            foreach ($row as &$col) {
+                $col = $col instanceof \DateTime ? $col->format(\DateTime::ISO8601) : $col;
+            }
+        }
+
+        return $rows;
+    }
 }
