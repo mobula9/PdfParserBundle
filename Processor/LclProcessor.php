@@ -5,19 +5,18 @@ namespace Kasifi\PdfParserBundle\Processor;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Class LclProcessor
- * @package Kasifi\PdfParserBundle\Processor
+ * Class LclProcessor.
  */
 class LclProcessor extends Processor implements ProcessorInterface
 {
     protected $configuration = [
-        'id'                   => 'lcl',
-        'name'                 => 'LCL - Compte courant particulier',
-        'startConditions'      => ['/ DATE\s+LIBELLE\s+/'],
-        'endConditions'        => ['/Page \d \/ \d/', '/LCL vous informe/'],
+        'id' => 'lcl',
+        'name' => 'LCL - Compte courant particulier',
+        'startConditions' => ['/ DATE\s+LIBELLE\s+/'],
+        'endConditions' => ['/Page \d \/ \d/', '/LCL vous informe/'],
         'rowMergeColumnTokens' => [0],
-        'rowSkipConditions'    => ['ANCIEN SOLDE', 'TOTAUX', 'SOLDE EN EUROS', 'SOLDE INTERMEDIAIRE A'],
-        'rowsToSkip'           => [0],
+        'rowSkipConditions' => ['ANCIEN SOLDE', 'TOTAUX', 'SOLDE EN EUROS', 'SOLDE INTERMEDIAIRE A'],
+        'rowsToSkip' => [0],
     ];
 
     /**
@@ -27,7 +26,7 @@ class LclProcessor extends Processor implements ProcessorInterface
      */
     public function format(ArrayCollection $data)
     {
-        $data = $data->map(function ($item) {
+        $data = $data->map(function($item) {
             // Date
             $dateRaw = $item[2];
             $date = new \DateTime();
@@ -45,7 +44,7 @@ class LclProcessor extends Processor implements ProcessorInterface
             }
 
             return [
-                'date'  => $date,
+                'date' => $date,
                 'label' => $item[1],
                 'value' => $value,
                 'debit' => $debit,

@@ -1,4 +1,4 @@
-[![Latest Stable Version](https://poser.pugx.org/lucascherifi/pdf-parser-bundle/v/stable)](https://packagist.org/packages/lucascherifi/pdf-parser-bundle) [![Build Status](https://travis-ci.org/lucascherifi/PdfParserBundle.svg?branch=master)](https://travis-ci.org/lucascherifi/PdfParserBundle) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b5492302-98fd-4698-ba33-fd3251276adb/big.png)](https://insight.sensiolabs.com/projects/b5492302-98fd-4698-ba33-fd3251276adb) [![License](https://poser.pugx.org/lucascherifi/pdf-parser-bundle/license)](https://packagist.org/packages/lucascherifi/pdf-parser-bundle)
+[![Latest Stable Version](https://poser.pugx.org/lucascherifi/pdf-parser-bundle/v/stable)](https://packagist.org/packages/lucascherifi/pdf-parser-bundle) [![Build Status](https://travis-ci.org/lucascherifi/PdfParserBundle.svg?branch=master)](https://travis-ci.org/lucascherifi/PdfParserBundle) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b5492302-98fd-4698-ba33-fd3251276adb/mini.png)](https://insight.sensiolabs.com/projects/b5492302-98fd-4698-ba33-fd3251276adb) [![License](https://poser.pugx.org/lucascherifi/pdf-parser-bundle/license)](https://packagist.org/packages/lucascherifi/pdf-parser-bundle)
 
 PdfParserBundle
 ===============
@@ -143,9 +143,9 @@ Now the command will print the parsed rows.
 ```
 (values has been hidden in this example)
 
-#### How to add a new document Processor
+#### How to add a custom document `Processor`?
 
-##### 1. Create the Processor class
+##### 1. Create the `Processor` class
 
 Creates a `AppBundle/Processor/MyProcessor.php` file with the following content:
 

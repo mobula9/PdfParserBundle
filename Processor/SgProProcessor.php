@@ -5,21 +5,20 @@ namespace Kasifi\PdfParserBundle\Processor;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Class SgProProcessor
- * @package Kasifi\PdfParserBundle\Processor
+ * Class SgProProcessor.
  */
 class SgProProcessor extends Processor implements ProcessorInterface
 {
     protected $configuration = [
-        'id'                   => 'sg_pro',
-        'name'                 => 'Société Générale - Compte courant professionnel',
-        'startConditions'      => ['/Date\s+Valeur\s+Nature de l\'opération/'],
-        'endConditions'        => [
+        'id' => 'sg_pro',
+        'name' => 'Société Générale - Compte courant professionnel',
+        'startConditions' => ['/Date\s+Valeur\s+Nature de l\'opération/'],
+        'endConditions' => [
             '/1 Depuis l\'étranger/', '/N° d\'adhérent JAZZ Pro/', '/Société Générale\s+552 120 222 RCS Paris/',
         ],
         'rowMergeColumnTokens' => [0],
-        'rowSkipConditions'    => ['SOLDE PRÉCÉDENT AU', 'TOTAUX DES MOUVEMENTS', 'RA4-01K', 'NOUVEAU SOLDE AU'],
-        'rowsToSkip'           => [0],
+        'rowSkipConditions' => ['SOLDE PRÉCÉDENT AU', 'TOTAUX DES MOUVEMENTS', 'RA4-01K', 'NOUVEAU SOLDE AU'],
+        'rowsToSkip' => [0],
     ];
 
     /**
@@ -29,7 +28,7 @@ class SgProProcessor extends Processor implements ProcessorInterface
      */
     public function format(ArrayCollection $data)
     {
-        $data = $data->map(function ($item) {
+        $data = $data->map(function($item) {
             // Date
             $dateRaw = $item[0];
             $date = new \DateTime();
@@ -54,11 +53,11 @@ class SgProProcessor extends Processor implements ProcessorInterface
             }
 
             return [
-                'date'       => $date,
+                'date' => $date,
                 'value_date' => $valueDate,
-                'label'      => $item[2],
-                'value'      => $value,
-                'debit'      => $debit,
+                'label' => $item[2],
+                'value' => $value,
+                'debit' => $debit,
             ];
         });
 

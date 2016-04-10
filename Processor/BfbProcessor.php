@@ -5,19 +5,18 @@ namespace Kasifi\PdfParserBundle\Processor;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Class BfbProcessor
- * @package Kasifi\PdfParserBundle\Processor
+ * Class BfbProcessor.
  */
 class BfbProcessor extends Processor implements ProcessorInterface
 {
     protected $configuration = [
-        'id'                   => 'bfb',
-        'name'                 => 'B For Bank - Compte courant particulier',
-        'startConditions'      => ['/Libellé de l\'opération/'],
-        'endConditions'        => ['/BforBank vous informe/', '/Nous vous rappelons qu\'en cas de différend/'],
+        'id' => 'bfb',
+        'name' => 'B For Bank - Compte courant particulier',
+        'startConditions' => ['/Libellé de l\'opération/'],
+        'endConditions' => ['/BforBank vous informe/', '/Nous vous rappelons qu\'en cas de différend/'],
         'rowMergeColumnTokens' => [1],
-        'rowSkipConditions'    => ['Votre ancien solde', '063584840313690801pli', 'Votre nouveau solde'],
-        'rowsToSkip'           => [0, 1],
+        'rowSkipConditions' => ['Votre ancien solde', '063584840313690801pli', 'Votre nouveau solde'],
+        'rowsToSkip' => [0, 1],
     ];
 
     /**
@@ -27,7 +26,7 @@ class BfbProcessor extends Processor implements ProcessorInterface
      */
     public function format(ArrayCollection $data)
     {
-        $data = $data->map(function ($item) {
+        $data = $data->map(function($item) {
             // Date
             $dateRaw = $item[1];
             $date = new \DateTime();
@@ -44,7 +43,7 @@ class BfbProcessor extends Processor implements ProcessorInterface
             }
 
             return [
-                'date'  => $date,
+                'date' => $date,
                 'label' => $item[2],
                 'value' => $value,
                 'debit' => $debit,

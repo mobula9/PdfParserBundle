@@ -59,6 +59,7 @@ class PdfParser
      * @param $filePath
      *
      * @return ArrayCollection
+     *
      * @throws Exception
      */
     public function parse($filePath)
@@ -95,11 +96,11 @@ class PdfParser
      * @param $data
      *
      * @return array|string
+     *
      * @throws Exception
      */
     private function doParse($data)
     {
-
         $blocks = [];
 
         while ($startPos = $this->findPosition($data, $this->processorConfiguration['startConditions'])) {
@@ -301,7 +302,6 @@ class PdfParser
     {
         $globalSpacePositions = [];
         foreach ($rawRows as $rawRow) {
-
             $spacePositions = $this->getSpacePositions($rawRow);
 
             if (count($globalSpacePositions)) {
@@ -321,16 +321,16 @@ class PdfParser
                 $previousPos = $globalSpacePositions[$key - 1];
                 $increase = $spacePosition - $previousPos;
                 if ($increase == 1) {
-                    $spaceGroups[$spaceGroupIndex]['end']++;
+                    ++$spaceGroups[$spaceGroupIndex]['end'];
                 } else {
-                    $spaceGroupIndex++;
+                    ++$spaceGroupIndex;
                     $spaceGroups[$spaceGroupIndex] = ['start' => $spacePosition, 'end' => $spacePosition + 1];
                 }
             }
         }
 
         // clean "false positive" space groups
-        $spaceGroups = array_filter($spaceGroups, function ($spaceGroup) {
+        $spaceGroups = array_filter($spaceGroups, function($spaceGroup) {
             return $spaceGroup['end'] - $spaceGroup['start'] > 1;
         });
 
@@ -364,7 +364,7 @@ class PdfParser
         $tmpPath = $this->temporaryDirectoryPath . '/' . rand(0, 10000) . '.txt';
         $process = new Process('/usr/bin/pdftotext -layout ' . $filePath . ' ' . $tmpPath);
         $this->logger->info('Execute Pdftotext', ['file' => $filePath]);
-        $process->run(function ($type, $buffer) {
+        $process->run(function($type, $buffer) {
             if (Process::ERR === $type) {
                 echo 'ERR > ' . $buffer;
             } else {

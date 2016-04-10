@@ -1,4 +1,5 @@
 <?php
+
 namespace Kasifi\PdfParserBundle\Command;
 
 use Kasifi\PdfParserBundle\PdfParser;
@@ -14,8 +15,7 @@ use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Yaml\Dumper;
 
 /**
- * Class ParserCommand
- * @package Kasifi\PdfParserBundle\Command
+ * Class ParserCommand.
  */
 class ParserCommand extends ContainerAwareCommand
 {
@@ -35,8 +35,6 @@ class ParserCommand extends ContainerAwareCommand
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output
-     *
-     * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -62,7 +60,7 @@ class ParserCommand extends ContainerAwareCommand
             $finder->files()->in($pdfDirectoryPath);
             $files = [];
             foreach ($finder as $key => $file) {
-                /** @var SplFileInfo $file */
+                /* @var SplFileInfo $file */
                 $files[] = $file->getRealPath();
             }
 
@@ -93,9 +91,8 @@ class ParserCommand extends ContainerAwareCommand
                 if (count($data)) {
                     $table = new Table($output);
                     $table
-                        ->setHeaders(array(array_keys($data[0])))
-                        ->setRows($data)
-                    ;
+                        ->setHeaders([array_keys($data[0])])
+                        ->setRows($data);
                     $table->render();
                 }
                 break;
