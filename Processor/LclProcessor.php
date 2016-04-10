@@ -8,9 +8,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Class LclProcessor
  * @package Kasifi\PdfParserBundle\Processor
  */
-class LclProcessor implements ProcessorInterface
+class LclProcessor extends Processor implements ProcessorInterface
 {
-    private $configuration = [
+    protected $configuration = [
         'id'                   => 'lcl',
         'name'                 => 'LCL - Compte courant particulier',
         'startConditions'      => ['/ DATE\s+LIBELLE\s+/'],
@@ -19,19 +19,6 @@ class LclProcessor implements ProcessorInterface
         'rowSkipConditions'    => ['ANCIEN SOLDE', 'TOTAUX', 'SOLDE EN EUROS', 'SOLDE INTERMEDIAIRE A'],
         'rowsToSkip'           => [0],
     ];
-
-    /**
-     * @return array
-     */
-    public function getConfiguration()
-    {
-        return $this->configuration;
-    }
-
-    public function __toString()
-    {
-        return (string)$this->configuration['name'];
-    }
 
     /**
      * @param ArrayCollection $data

@@ -8,9 +8,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Class SgProProcessor
  * @package Kasifi\PdfParserBundle\Processor
  */
-class SgProProcessor implements ProcessorInterface
+class SgProProcessor extends Processor implements ProcessorInterface
 {
-    private $configuration = [
+    protected $configuration = [
         'id'                   => 'sg_pro',
         'name'                 => 'Société Générale - Compte courant professionnel',
         'startConditions'      => ['/Date\s+Valeur\s+Nature de l\'opération/'],
@@ -21,19 +21,6 @@ class SgProProcessor implements ProcessorInterface
         'rowSkipConditions'    => ['SOLDE PRÉCÉDENT AU', 'TOTAUX DES MOUVEMENTS', 'RA4-01K', 'NOUVEAU SOLDE AU'],
         'rowsToSkip'           => [0],
     ];
-
-    /**
-     * @return array
-     */
-    public function getConfiguration()
-    {
-        return $this->configuration;
-    }
-
-    public function __toString()
-    {
-        return (string)$this->configuration['name'];
-    }
 
     /**
      * @param ArrayCollection $data

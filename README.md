@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/lucascherifi/PdfParserBundle.svg?branch=master)](https://travis-ci.org/lucascherifi/PdfParserBundle) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b5492302-98fd-4698-ba33-fd3251276adb/big.png)](https://insight.sensiolabs.com/projects/b5492302-98fd-4698-ba33-fd3251276adb)
+[![Latest Stable Version](https://poser.pugx.org/lucascherifi/pdf-parser-bundle/v/stable)](https://packagist.org/packages/lucascherifi/pdf-parser-bundle) [![Build Status](https://travis-ci.org/lucascherifi/PdfParserBundle.svg?branch=master)](https://travis-ci.org/lucascherifi/PdfParserBundle) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b5492302-98fd-4698-ba33-fd3251276adb/big.png)](https://insight.sensiolabs.com/projects/b5492302-98fd-4698-ba33-fd3251276adb) [![License](https://poser.pugx.org/lucascherifi/pdf-parser-bundle/license)](https://packagist.org/packages/lucascherifi/pdf-parser-bundle)
 
 PdfParserBundle
 ===============
@@ -158,11 +158,12 @@ Creates a `AppBundle/Processor/MyProcessor.php` file with the following content:
 namespace AppBundle\Processor;
 
 use Kasifi\PdfParserBundle\Processor\ProcessorInterface;
+use Kasifi\PdfParserBundle\Processor\Processor;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class MyProcessor implements ProcessorInterface
+class MyProcessor extends Processor implements ProcessorInterface
 {
-    private $configuration = [
+    protected $configuration = [
         'id'                   => 'my',
         'name'                 => 'Title of my processor',
         'startConditions'      => ['/A text content in the header row ot the table to parse/'],
@@ -171,19 +172,6 @@ class MyProcessor implements ProcessorInterface
         'rowSkipConditions'    => ['useless string', 'another useless string'],
         'rowsToSkip'           => [0, 1],
     ];
-
-    /**
-     * @return array
-     */
-    public function getConfiguration()
-    {
-        return $this->configuration;
-    }
-
-    public function __toString()
-    {
-        return (string)$this->configuration['name'];
-    }
 
     /**
      * @param ArrayCollection $data

@@ -8,9 +8,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Class BfbProcessor
  * @package Kasifi\PdfParserBundle\Processor
  */
-class BfbProcessor implements ProcessorInterface
+class BfbProcessor extends Processor implements ProcessorInterface
 {
-    private $configuration = [
+    protected $configuration = [
         'id'                   => 'bfb',
         'name'                 => 'B For Bank - Compte courant particulier',
         'startConditions'      => ['/Libellé de l\'opération/'],
@@ -19,19 +19,6 @@ class BfbProcessor implements ProcessorInterface
         'rowSkipConditions'    => ['Votre ancien solde', '063584840313690801pli', 'Votre nouveau solde'],
         'rowsToSkip'           => [0, 1],
     ];
-
-    /**
-     * @return array
-     */
-    public function getConfiguration()
-    {
-        return $this->configuration;
-    }
-
-    public function __toString()
-    {
-        return (string)$this->configuration['name'];
-    }
 
     /**
      * @param ArrayCollection $data
