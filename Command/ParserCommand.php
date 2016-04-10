@@ -15,7 +15,6 @@ use Symfony\Component\Yaml\Dumper;
 
 /**
  * Class ParserCommand
- * @package Kasifi\PdfParserBundle\Command
  */
 class ParserCommand extends ContainerAwareCommand
 {

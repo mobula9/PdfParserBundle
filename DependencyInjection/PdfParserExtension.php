@@ -9,7 +9,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * Class PdfParserExtension
- * @package Kasifi\PdfParserBundle\DependencyInjection
  */
 class PdfParserExtension extends Extension
 {

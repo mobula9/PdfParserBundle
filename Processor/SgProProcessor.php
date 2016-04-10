@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class SgProProcessor
- * @package Kasifi\PdfParserBundle\Processor
  */
 class SgProProcessor extends Processor implements ProcessorInterface
 {

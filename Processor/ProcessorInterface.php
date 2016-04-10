@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Interface ProcessorInterface
- * @package Kasifi\PdfParserBundle\Processor
  */
 interface ProcessorInterface
 {

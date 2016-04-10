@@ -4,7 +4,6 @@ namespace Kasifi\PdfParserBundle\Processor;
 
 /**
  * Class Processor
- * @package Kasifi\PdfParserBundle\Processor
  */
 abstract class Processor
 {
