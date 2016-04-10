@@ -41,23 +41,15 @@ class SgProProcessor extends Processor implements ProcessorInterface
             $valueDate->setDate((int) substr($dateRaw, 6, 4), (int) substr($dateRaw, 3, 2), (int) substr($dateRaw, 0, 2));
             $valueDate->setTime(12, 0, 0);
 
-            // Value
-            $debitRaw = $item[3];
-            if (strlen($debitRaw)) {
-                $value = abs((float) str_replace(',', '.', str_replace('.', '', $debitRaw)));
-                $debit = true;
-            } else {
-                $creditRaw = $item[4];
-                $value = (float) str_replace(',', '.', str_replace('.', '', $creditRaw));
-                $debit = false;
-            }
+            // Transaction
+            $transaction = $this->frenchTransactionFormatter($item[3], $item[4]);
 
             return [
                 'date' => $date,
                 'value_date' => $valueDate,
                 'label' => $item[2],
-                'value' => $value,
-                'debit' => $debit,
+                'value' => $transaction['value'],
+                'debit' => $transaction['debit'],
             ];
         });
 

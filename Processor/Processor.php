@@ -25,7 +25,24 @@ abstract class Processor
         return (string) $this->configuration['name'];
     }
 
-    public function frenchDateFormatter($raw)
+    /**
+     * @param string $debitRaw
+     * @param string $creditRaw
+     *
+     * @return array
+     */
+    public function frenchTransactionFormatter($debitRaw, $creditRaw)
     {
+        if (strlen($debitRaw)) {
+            $value = abs((float) str_replace(',', '.', str_replace(' ', '', $debitRaw)));
+            $debit = true;
+        } else {
+            $value = (float) str_replace(',', '.', str_replace(' ', '', $creditRaw));
+            $debit = false;
+        }
+        return [
+            'value' => $value,
+            'debit' => $debit,
+        ];
     }
 }
