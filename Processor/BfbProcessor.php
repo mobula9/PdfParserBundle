@@ -26,7 +26,7 @@ class BfbProcessor extends Processor implements ProcessorInterface
      */
     public function format(ArrayCollection $data)
     {
-        $data = $data->map(function ($item) {
+        $data = $data->map(function($item) {
             // Date
             $dateRaw = $item[1];
             $date = new \DateTime();
@@ -35,10 +35,10 @@ class BfbProcessor extends Processor implements ProcessorInterface
 
             // Value
             if (strlen($item[3])) {
-                $value = abs((float) str_replace(',', '.', str_replace(' ', '', $item[3])));
+                $value = abs((float)str_replace(',', '.', str_replace(' ', '', $item[3])));
                 $debit = true;
             } else {
-                $value = (float) str_replace(',', '.', str_replace(' ', '', $item[4]));
+                $value = (float)str_replace(',', '.', str_replace(' ', '', $item[4]));
                 $debit = false;
             }
 
