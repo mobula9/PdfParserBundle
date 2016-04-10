@@ -115,7 +115,7 @@ class PdfParser
 
             $endPos = ParseHelper::findPosition($data, $this->processorConfiguration['endConditions']);
             if (is_null($endPos)) {
-                throw new Exception('End condition not reached at the ' . (count($blocks) + 1) . 'nth loop of block.');
+                throw new Exception('End condition not reached at the ' . (count($blocks) + 1) . ' nth loop of block.');
             } else {
                 $blockData = substr($data, 0, $endPos);
                 $data = substr($data, $endPos);
@@ -132,7 +132,7 @@ class PdfParser
             $blocks[] = $block;
         }
 
-        // MERGE BLOCKS
+        // Merge block.
         $data = [];
         foreach ($blocks as $block) {
             $data = array_merge($data, $block);
@@ -217,7 +217,7 @@ class PdfParser
             }
         }
 
-        // clean "false positive" space groups
+        // Clean "false positive" space groups.
         $spaceGroups = array_filter($spaceGroups, function ($spaceGroup) {
             return $spaceGroup['end'] - $spaceGroup['start'] > 1;
         });

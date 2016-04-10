@@ -28,13 +28,15 @@ class ParserCommand extends ContainerAwareCommand
             ->setName('pdf-parser:parse')
             ->setDescription('Parse document of many types.')
             ->addArgument('processor', InputArgument::OPTIONAL, 'The id of the processor')
-            ->addArgument('filepath', InputArgument::OPTIONAL, 'The absolute path to the PDF file to parse.')
+            ->addArgument('file_path', InputArgument::OPTIONAL, 'The absolute path to the PDF file to parse.')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (console, json, yml)', 'console');
     }
 
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output
+     *
+     * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -53,7 +55,7 @@ class ParserCommand extends ContainerAwareCommand
         $pdfParser->setProcessor($processors[$processorId]);
 
         // Select file
-        $filePath = $input->getArgument('filepath');
+        $filePath = $input->getArgument('file_path');
         if (!$filePath) {
             $helper = $this->getHelper('question');
             $finder = new Finder();
