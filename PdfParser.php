@@ -59,6 +59,7 @@ class PdfParser
      * @param $filePath
      *
      * @return ArrayCollection
+     *
      * @throws Exception
      */
     public function parse($filePath)
@@ -95,11 +96,11 @@ class PdfParser
      * @param $data
      *
      * @return array|string
+     *
      * @throws Exception
      */
     private function doParse($data)
     {
-
         $blocks = [];
 
         while ($startPos = $this->findPosition($data, $this->processorConfiguration['startConditions'])) {
@@ -114,7 +115,7 @@ class PdfParser
 
             $endPos = $this->findPosition($data, $this->processorConfiguration['endConditions']);
             if (is_null($endPos)) {
-                throw new Exception('End condition not reached at the ' . (count($blocks) + 1) . 'nth loop of block.');
+                throw new Exception('End condition not reached at the '.(count($blocks) + 1).'nth loop of block.');
             } else {
                 $blockData = substr($data, 0, $endPos);
                 $data = substr($data, $endPos);
@@ -301,7 +302,6 @@ class PdfParser
     {
         $globalSpacePositions = [];
         foreach ($rawRows as $rawRow) {
-
             $spacePositions = $this->getSpacePositions($rawRow);
 
             if (count($globalSpacePositions)) {
@@ -321,9 +321,9 @@ class PdfParser
                 $previousPos = $globalSpacePositions[$key - 1];
                 $increase = $spacePosition - $previousPos;
                 if ($increase == 1) {
-                    $spaceGroups[$spaceGroupIndex]['end']++;
+                    ++$spaceGroups[$spaceGroupIndex]['end'];
                 } else {
-                    $spaceGroupIndex++;
+                    ++$spaceGroupIndex;
                     $spaceGroups[$spaceGroupIndex] = ['start' => $spacePosition, 'end' => $spacePosition + 1];
                 }
             }
@@ -347,7 +347,7 @@ class PdfParser
     {
         foreach ($newRow as $newRowColumnIndex => $newRowColumnValue) {
             if (strlen($newRowColumnValue)) {
-                $row[$newRowColumnIndex] = trim($row[$newRowColumnIndex] . "\n" . $newRowColumnValue);
+                $row[$newRowColumnIndex] = trim($row[$newRowColumnIndex]."\n".$newRowColumnValue);
             }
         }
 
@@ -361,14 +361,14 @@ class PdfParser
      */
     private function getTextVersion($filePath)
     {
-        $tmpPath = $this->temporaryDirectoryPath . '/' . rand(0, 10000) . '.txt';
-        $process = new Process('/usr/bin/pdftotext -layout ' . $filePath . ' ' . $tmpPath);
+        $tmpPath = $this->temporaryDirectoryPath.'/'.rand(0, 10000).'.txt';
+        $process = new Process('/usr/bin/pdftotext -layout '.$filePath.' '.$tmpPath);
         $this->logger->info('Execute Pdftotext', ['file' => $filePath]);
         $process->run(function ($type, $buffer) {
             if (Process::ERR === $type) {
-                echo 'ERR > ' . $buffer;
+                echo 'ERR > '.$buffer;
             } else {
-                echo 'OUT > ' . $buffer;
+                echo 'OUT > '.$buffer;
             }
         });
 

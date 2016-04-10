@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Class ProcessorCompilerPass
+ * Class ProcessorCompilerPass.
  */
 class ProcessorCompilerPass implements CompilerPassInterface
 {

@@ -5,18 +5,18 @@ namespace Kasifi\PdfParserBundle\Processor;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Class BfbProcessor
+ * Class BfbProcessor.
  */
 class BfbProcessor extends Processor implements ProcessorInterface
 {
     protected $configuration = [
-        'id'                   => 'bfb',
-        'name'                 => 'B For Bank - Compte courant particulier',
-        'startConditions'      => ['/Libellé de l\'opération/'],
-        'endConditions'        => ['/BforBank vous informe/', '/Nous vous rappelons qu\'en cas de différend/'],
+        'id' => 'bfb',
+        'name' => 'B For Bank - Compte courant particulier',
+        'startConditions' => ['/Libellé de l\'opération/'],
+        'endConditions' => ['/BforBank vous informe/', '/Nous vous rappelons qu\'en cas de différend/'],
         'rowMergeColumnTokens' => [1],
-        'rowSkipConditions'    => ['Votre ancien solde', '063584840313690801pli', 'Votre nouveau solde'],
-        'rowsToSkip'           => [0, 1],
+        'rowSkipConditions' => ['Votre ancien solde', '063584840313690801pli', 'Votre nouveau solde'],
+        'rowsToSkip' => [0, 1],
     ];
 
     /**
@@ -35,15 +35,15 @@ class BfbProcessor extends Processor implements ProcessorInterface
 
             // Value
             if (strlen($item[3])) {
-                $value = abs((float)str_replace(',', '.', str_replace(' ', '', $item[3])));
+                $value = abs((float) str_replace(',', '.', str_replace(' ', '', $item[3])));
                 $debit = true;
             } else {
-                $value = (float)str_replace(',', '.', str_replace(' ', '', $item[4]));
+                $value = (float) str_replace(',', '.', str_replace(' ', '', $item[4]));
                 $debit = false;
             }
 
             return [
-                'date'  => $date,
+                'date' => $date,
                 'label' => $item[2],
                 'value' => $value,
                 'debit' => $debit,

@@ -5,7 +5,7 @@ namespace Kasifi\PdfParserBundle\Processor;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Interface ProcessorInterface
+ * Interface ProcessorInterface.
  */
 interface ProcessorInterface
 {
