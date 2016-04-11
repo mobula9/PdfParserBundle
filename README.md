@@ -3,7 +3,7 @@
 PdfParserBundle
 ===============
 
-The purpose of this bundle is to parse the contents of PDF files using DocumentProcessors. It returns formatted data ready to use.
+The purpose of this bundle is to parse the contents of PDF files using specific document processors. If the bundled command is use, it returns formatted data ready to use in many formats (JSON, YML or output).
 
 For now, three are available in this bundle:
 - "LCL - Relevé de compte courant particulier"
